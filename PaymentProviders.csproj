@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<TargetFramework>net6.0</TargetFramework>
+		<Authors>Yasin ilkalp Arabacı</Authors>
+		<Company>KodEkibi</Company>
+		<PackageDescription>This package Payment Providers </PackageDescription>
+		<RepositoryUrl>https://github.com/yasinilkalp/PaymentProviders</RepositoryUrl>
+		<PackageIcon>icon.png</PackageIcon>
+		<Version>1.0.1</Version>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="icon.png" Pack="true" PackagePath="" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.13" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+
+</Project>
