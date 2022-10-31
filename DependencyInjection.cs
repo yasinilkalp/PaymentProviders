@@ -5,7 +5,7 @@ namespace PaymentProviders
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddRedisServer(this IServiceCollection services)
+        public static IServiceCollection AddPaymentProvider(this IServiceCollection services)
         {  
 
             services.AddTransient<IPaymentProviderFactory, PaymentProviderFactory>();

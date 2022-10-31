@@ -5,10 +5,10 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Authors>Yasin ilkalp Arabacı</Authors>
 		<Company>KodEkibi</Company>
-		<PackageDescription>This package Payment Providers </PackageDescription>
+		<PackageDescription>Ledbim Payment Provider</PackageDescription>
 		<RepositoryUrl>https://github.com/yasinilkalp/PaymentProviders</RepositoryUrl>
 		<PackageIcon>icon.png</PackageIcon>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 	</PropertyGroup>
 	<ItemGroup>
 		<None Include="icon.png" Pack="true" PackagePath="" />
