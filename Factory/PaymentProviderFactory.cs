@@ -23,14 +23,7 @@ namespace PaymentProviders.Factory
             {
                 case PosEngineType.ASSECO:
                     return ActivatorUtilities.GetServiceOrCreateInstance<AssecoPaymentProvider>(_serviceProvider);
-                case PosEngineType.FINANSBANK:
-                    return ActivatorUtilities.GetServiceOrCreateInstance<FinansbankPaymentProvider>(_serviceProvider);
-                case PosEngineType.YAPIKREDI:
-                    return ActivatorUtilities.GetServiceOrCreateInstance<YapikrediPaymentProvider>(_serviceProvider);
-                case PosEngineType.GARANTI:
-                    return ActivatorUtilities.GetServiceOrCreateInstance<GarantiPaymentProvider>(_serviceProvider);
-                case PosEngineType.PAYTR:
-                    return ActivatorUtilities.GetServiceOrCreateInstance<PayTRProvider>(_serviceProvider);
+
                 default:
                     throw new NotSupportedException("Bank engine not supported");
             }

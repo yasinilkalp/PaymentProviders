@@ -11,7 +11,7 @@ namespace PaymentProviders.Providers
 {
     public class AssecoPaymentProvider : IPaymentProvider
     {
-     
+
         public PaymentParameterResult GetPaymentParameters(PaymentRequest request)
         {
 
@@ -88,43 +88,41 @@ namespace PaymentProviders.Providers
 
         public PaymentResult GetPaymentResult(IFormCollection form)
         {
-            var paymentResult = new PaymentResult();
-            if (form == null)
+            //
+            if (form == null) return new PaymentResult() { BankErrorMessage = "Form verisi alınamadı." };
+
+            PaymentResult result = new()
             {
-                paymentResult.ErrorMessage = "Form verisi alınamadı.";
-                return paymentResult;
-            }
+                Success = true,
+                Status = form["mdStatus"],
+                TransactionNumber = form["TransId"],
+                ReferenceNumber = form["oid"],
+                BankErrorMessage = $"{form["Response"]} - {form["ErrMsg"]} - {form["mdErrorMsg"]}",
+                ErrMsg = form["ErrMsg"],
+                ErrorCode = form["ProcReturnCode"],
+                CardHolderName = form["cardHolderName"],
+                Installment = int.TryParse(form["taksit"], out _) ? int.Parse(form["taksit"]) : 1,
+                MaskedCreditCard = form["maskedCreditCard"],
+                TotalAmount = decimal.Parse(form["amount"], new CultureInfo("en-US")),
+                CardBrand = form["EXTRA.CARDBRAND"],
+                PaidDate = PaymentResult.ConvertDate(form["EXTRA.TRXDATE"]),
+                CardIssuer = form["EXTRA.CARDISSUER"],
+                BankRequest = PaymentResult.GenerateBankRequest(form),
+            };
 
-            var mdStatus = form["mdStatus"];
-            if (StringValues.IsNullOrEmpty(mdStatus))
-            {
-                paymentResult.ErrorMessage = form["mdErrorMsg"];
-                paymentResult.ErrorCode = form["ProcReturnCode"];
-                return paymentResult;
-            }
+            // mdstatus 1,2,3 veya 4 olursa 3D doğrulama geçildi anlamına geliyor 
+            if (PaymentResult.FailStatusControl(result.Status, new string[] { "1", "2", "3", "4" })) return PaymentResult.Error(result);
 
-            var response = form["Response"];
-            //mdstatus 1,2,3 veya 4 olursa 3D doğrulama geçildi anlamına geliyor
-            if (!mdStatus.Equals("1") || !mdStatus.Equals("2") || !mdStatus.Equals("3") || !mdStatus.Equals("4"))
-            {
-                paymentResult.ErrorMessage = $"{response} - {form["mdErrorMsg"]}";
-                paymentResult.ErrorCode = form["ProcReturnCode"];
-                return paymentResult;
-            }
 
-            if (StringValues.IsNullOrEmpty(response) || !response.Equals("Approved"))
-            {
-                paymentResult.ErrorMessage = $"{response} - {form["ErrMsg"]}";
-                paymentResult.ErrorCode = form["ProcReturnCode"];
-                return paymentResult;
-            }
+            string Response = form["Response"];
+            if (StringValues.IsNullOrEmpty(Response) || !Response.Equals("Approved"))
+                return PaymentResult.Error(result);
 
-            paymentResult.Success = true;
-            paymentResult.ResponseCode = mdStatus;
-            paymentResult.TransactionId = form["TransId"];
-            paymentResult.ErrorMessage = $"{response} - {form["ErrMsg"]}";
 
-            return paymentResult;
+
+
+
+            return result;
         }
     }
 }
