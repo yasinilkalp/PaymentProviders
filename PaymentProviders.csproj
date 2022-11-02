@@ -8,7 +8,7 @@
 		<PackageDescription>Ledbim Payment Provider</PackageDescription>
 		<RepositoryUrl>https://github.com/yasinilkalp/PaymentProviders</RepositoryUrl>
 		<PackageIcon>icon.png</PackageIcon>
-		<Version>1.0.6</Version>
+		<Version>1.0.7</Version>
 	</PropertyGroup>
 	<ItemGroup>
 		<None Include="icon.png" Pack="true" PackagePath="" />
