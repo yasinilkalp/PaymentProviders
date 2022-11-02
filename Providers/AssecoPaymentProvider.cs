@@ -94,7 +94,8 @@ namespace PaymentProviders.Providers
             PaymentResult result = new()
             {
                 Success = true,
-                Status = form["mdStatus"],
+                MdStatus = form["mdStatus"],
+                Status = form["Response"],
                 TransactionNumber = form["TransId"],
                 ReferenceNumber = form["oid"],
                 BankErrorMessage = $"{form["Response"]} - {form["ErrMsg"]} - {form["mdErrorMsg"]}",
@@ -111,16 +112,10 @@ namespace PaymentProviders.Providers
             };
 
             // mdstatus 1,2,3 veya 4 olursa 3D doğrulama geçildi anlamına geliyor 
-            if (PaymentResult.FailStatusControl(result.Status, new string[] { "1", "2", "3", "4" })) return PaymentResult.Error(result);
-
-
-            string Response = form["Response"];
-            if (StringValues.IsNullOrEmpty(Response) || !Response.Equals("Approved"))
+            if (PaymentResult.FailStatusControl(result.MdStatus, new string[] { "1", "2", "3", "4" })) return PaymentResult.Error(result);
+             
+            if (StringValues.IsNullOrEmpty(result.Status) || !result.Status.Equals("Approved"))
                 return PaymentResult.Error(result);
-
-
-
-
 
             return result;
         }

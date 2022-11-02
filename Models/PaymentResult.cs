@@ -27,12 +27,13 @@ namespace PaymentProviders.Models
         public DateTimeOffset? PaidDate { get; set; }
         public string ErrMsg { get; set; }
         public string Status { get; set; }
+        public string MdStatus { get; set; }
         public string StatusText
         {
             get
             {
-                if (Status == "1") return ErrMsg;
-                return int.TryParse(Status, out _) ? statuses[int.Parse(Status)] : "";
+                if (MdStatus == "1") return ErrMsg;
+                return int.TryParse(MdStatus, out _) ? statuses[int.Parse(MdStatus)] : "";
             }
         }
         public string BankRequest { get; set; }
