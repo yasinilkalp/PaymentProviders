@@ -1,16 +1,26 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using PaymentProviders.Models;
+using PaymentProviders.Models.SafeKey;
+using PaymentProviders.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace PaymentProviders.Providers
 {
     public class AssecoPaymentProvider : IPaymentProvider
     {
+        private readonly IPaymentRequestService _requestService;
+        public AssecoPaymentProvider(IPaymentRequestService requestService)
+        {
+            _requestService = requestService;
+        }
 
         public PaymentParameterResult GetPaymentParameters(PaymentRequest request)
         {
@@ -113,11 +123,27 @@ namespace PaymentProviders.Providers
 
             // mdstatus 1,2,3 veya 4 olursa 3D doğrulama geçildi anlamına geliyor 
             if (PaymentResult.FailStatusControl(result.MdStatus, new string[] { "1", "2", "3", "4" })) return PaymentResult.Error(result);
-             
+
             if (StringValues.IsNullOrEmpty(result.Status) || !result.Status.Equals("Approved"))
                 return PaymentResult.Error(result);
 
             return result;
+        }
+
+
+        public async Task<PaymentResponse> CreateSafeKey(CreateSafeKeyRequest request)
+        { 
+            return await _requestService.SendRequest<PaymentResponse>(request.Serialize()); 
+        }
+
+        public async Task<PaymentResponse> DisableSafeKey(DisableSafeKeyRequest request)
+        {
+            return await _requestService.SendRequest<PaymentResponse>(request.Serialize());
+        }
+
+        public async Task<PaymentResponse<SafeKeyResponse>> GetSafeKey(ListSafeKeyRequest request)
+        {
+            return await _requestService.SendRequest<PaymentResponse<SafeKeyResponse>>(request.Serialize());
         }
     }
 }
