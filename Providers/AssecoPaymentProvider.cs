@@ -48,17 +48,19 @@ namespace PaymentProviders.Providers
             var parameterResult = new PaymentParameterResult();
             try
             {
-                var parameters = new Dictionary<string, object>();
-                parameters.Add("clientid", clientId);
-                parameters.Add("amount", request.TotalAmount.ToString(new CultureInfo("en-US")));//kuruş ayrımı nokta olmalı!!!
-                parameters.Add("oid", request.OrderNumber);//sipariş numarası
+                var parameters = new Dictionary<string, object>
+                {
+                    { "clientid", clientId },
+                    { "amount", request.TotalAmount.ToString(new CultureInfo("tr-TR")) },//kuruş ayrımı virgül olmalı!!!
+                    { "oid", request.OrderNumber },//sipariş numarası
 
-                //işlem başarılı da olsa başarısız da olsa callback sayfasına yönlendirerek kendi tarafımızda işlem sonucunu kontrol ediyoruz
-                parameters.Add("okUrl", successUrl);//başarılı dönüş adresi
-                parameters.Add("failUrl", failUrl);//hatalı dönüş adresi
-                parameters.Add("islemtipi", processType);//direk satış
-                parameters.Add("taksit", request.Installment);//taksit sayısı | 1 veya boş tek çekim olur
-                parameters.Add("rnd", random);//rastgele bir sayı üretilmesi isteniyor
+                    //işlem başarılı da olsa başarısız da olsa callback sayfasına yönlendirerek kendi tarafımızda işlem sonucunu kontrol ediyoruz
+                    { "okUrl", successUrl },//başarılı dönüş adresi
+                    { "failUrl", failUrl },//hatalı dönüş adresi
+                    { "islemtipi", processType },//direk satış
+                    { "taksit", request.Installment },//taksit sayısı | 1 veya boş tek çekim olur
+                    { "rnd", random }//rastgele bir sayı üretilmesi isteniyor
+                };
 
                 string hashstr = clientId + request.OrderNumber + request.TotalAmount + successUrl + failUrl + processType + request.Installment + random + storeKey;
                 var cryptoServiceProvider = SHA1.Create();
